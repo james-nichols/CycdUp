@@ -20,10 +20,8 @@ void loop() {
     Serial.write(0xff);
     Serial.write(0xff);
     Serial.write(i);
-    uint8_t lower = analogVals[i] & 0x0f;
-    uint8_t upper = (analogVals[i] & 0xf0) >> 8;
-    Serial.write(lower);
-    Serial.write(upper);
+    Serial.write(lowByte(analogVals[i]));
+    Serial.write(highByte(analogVals[i]));
     
   }
   delay(10);

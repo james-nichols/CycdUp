@@ -41,7 +41,6 @@ void ofApp::setup(){
 
 	//serial.setup("/dev/tty.usbserial-A9007W2m", BAUD); // mac osx example
     serial.setup(0, BAUD); // Takes the first one from the device list, usually works.
-    //bSetupArduino = true;
     read_mode = READY;
     destination_buf = 0;
 }
@@ -79,7 +78,14 @@ void ofApp::update(){
                     if (destination_buf >= num_bufs)
                         ofLog() << "Insufficient buffers initialised for rider #" << destination_buf;
                     // Convert the two input bytes to 10 bit integer, then normalise to 0.0-1.0
-                    double data_point = float(in_bytes[0] * uint8_t(0x10) + in_bytes[1]) / 1024.0;
+                    //double data_point = float(in_bytes[0] * uint8_t(0x10) + in_bytes[1]) / 1024.0;
+                    int upper = in_bytes[0] * 256;
+                    int lower = in_bytes[1];
+                    double data_point = float(upper + lower) / 1024.0;
+                    
+                    // DEBUG OUTPUT...
+                    //ofLog() << "Dest: " << destination_buf << " Upper: " << upper << " Lower: " << lower << " result: " << data_point; 
+                    
                     buf[destination_buf].push_back(data_point);
                     // Circular buffer, so remove start point...
                     buf[destination_buf].erase(buf[destination_buf].begin());

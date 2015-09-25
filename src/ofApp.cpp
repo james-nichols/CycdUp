@@ -5,7 +5,7 @@ void ofApp::setup(){
     
     counter = 0;
     
-    bDraw = false; bRun = false;
+    bDraw = true; bRun = true;
     in_bytes[0] = 0; in_bytes[1] = 0; read_count = 0;
 
     num_bufs = NUM_RIDERS;
@@ -22,8 +22,10 @@ void ofApp::setup(){
         buf.push_back(buf_col);
         ofLog() << &buf_col << " " << &buf[j];
         ofLog() << buf[j][0];
-        
-        int hue = fmod(float(j*255)/float(num_bufs),float(255.0)); // ofRandom(0,255);
+         
+        // THIS is where the colours for the different riders is set. Just 
+        // equi-partition of hue space. CHANGE TO GO IN LINE WITH LED STRIPS!
+        int hue = fmod(float(j*255)/float(num_bufs),float(255.0)); 
         buf_colour.push_back(ofColor::fromHsb(hue, 240, 240));
     }
 
@@ -34,18 +36,11 @@ void ofApp::setup(){
     ofDisableAntiAliasing();
     ofSetFrameRate(FRAME_RATE);
 
-    // Set up the arduino for CV output (via PWM)
-	//ard.connect("/dev/tty.usbserial-A9007W2m", 57600);
-    //ofAddListener(ard.EInitialized, this, &ofApp::setupArduino);
-    //bSetupArduino = false;	// flag so we setup arduino when its ready, you don't need to touch this :)
-    
-    int baud = 57600;
-
 	serial.listDevices();
 	vector <ofSerialDeviceInfo> deviceList = serial.getDeviceList();
 
-	//serial.setup("/dev/tty.usbserial-A9007W2m", baud); // mac osx example
-    serial.setup(0, baud); // Takes the first one from the device list
+	//serial.setup("/dev/tty.usbserial-A9007W2m", BAUD); // mac osx example
+    serial.setup(0, BAUD); // Takes the first one from the device list, usually works.
     //bSetupArduino = true;
     read_mode = READY;
     destination_buf = 0;
@@ -65,6 +60,7 @@ void ofApp::update(){
         else if ( in_bytes[0] == OF_SERIAL_ERROR )
             ofLog() << "Serial read error occurred...";
         else
+
             switch(read_mode) { 
                 case READY:
                     if (in_bytes[0] == SERIAL_MSG_START && in_bytes[1] == SERIAL_MSG_START) { 
@@ -82,8 +78,10 @@ void ofApp::update(){
                 case PROCESS_DATA:
                     if (destination_buf >= num_bufs)
                         ofLog() << "Insufficient buffers initialised for rider #" << destination_buf;
+                    // Convert the two input bytes to 10 bit integer, then normalise to 0.0-1.0
                     double data_point = float(in_bytes[0] * uint8_t(0x10) + in_bytes[1]) / 1024.0;
                     buf[destination_buf].push_back(data_point);
+                    // Circular buffer, so remove start point...
                     buf[destination_buf].erase(buf[destination_buf].begin());
                     read_mode = READY;
                     break;
@@ -104,7 +102,6 @@ void ofApp::draw(){
             graph.setMode(OF_PRIMITIVE_LINE_STRIP);
             graph_double.setMode(OF_PRIMITIVE_LINE_STRIP);
             
-            float z = 8 * i;
             for (int j=0; j<buf_size; j++) {
                 graph.addColor(buf_colour[i]);
                 graph_double.addColor(buf_colour[i]);
@@ -114,8 +111,8 @@ void ofApp::draw(){
             
                 //graph.addVertex(ofVec2f(x,y)); 
                 //graph_double.addVertex(ofVec2f(x,y+1)); 
-                graph.addVertex(ofVec(x,y,z)); 
-                graph_double.addVertex(ofVec(x,y+1,z)); 
+                graph.addVertex(ofVec2f(x,y)); 
+                graph_double.addVertex(ofVec2f(x,y+1)); 
             
             }
             graph.draw();
@@ -127,10 +124,10 @@ void ofApp::draw(){
 
             ofSetColor(buf_colour[i]);
             ofNoFill();
-            ofCircle(x, y, z, 5);
+            ofCircle(x, y, 5);
             ofSetColor(ofColor(255,255,255,80));
             ofFill();
-            ofCircle(x, y, z, 4);
+            ofCircle(x, y, 4);
 
             // Write numerical value in top left-hand corner
             ofSetColor(buf_colour[i]);

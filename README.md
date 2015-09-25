@@ -4,7 +4,7 @@ Put this repo directory in [OpenFrameworksDir]/apps/myApps/ and compile using xc
 
 After compiling, and plugging in the ardiuno, run ./bin/CycdUp.app/Contents/MacOS/CycdUp 
 
-Then run synthesis in SuperCollider by opening the CycdUpSynths.scd patch and running the part between brackets, probably twice to ensure it's all running. This is done by double clicking on the first open-bracket so that the region between brackets is all selected, then hit "Apple-Enter" in osx. Not sure about Linux SC, but I'm sure it's something like Ctrl-Enter.
+Then run synthesis in SuperCollider by opening the CycdUpSynths.scd patch and running the 3 regions between brackets, probably twice to ensure it's all running. You run a region of code by double clicking on the first open-bracket so that the region between brackets is all selected, then hit "Apple-Enter" in osx. Not sure about Linux SC, but I'm sure it's something like Ctrl-Enter. Do this over for each "region" of code - the regions should are clearly labelled.
 
 Multi-channel audio is usually not a problem in SuperCollider, and each "bike" is sent to channels 1-4. However, sometimes SuperCollider can be a bit funny about choosing the right soundcard (e.g. sometimes it will choose the built-in sound instead of the soundcard you want). When you start the code, in the "Post Window" to the bottom right, there will be a section that says something like:
 ```

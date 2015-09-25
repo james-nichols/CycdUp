@@ -21,6 +21,7 @@ Ndef(\bike2).clear;
 Ndef(\bike3).clear;
 Ndef(\bike4).clear;
 
+
 // This is the generic "synth" that all bikes play, with varying parameters
 y = { | amp=1.0, freq=70, chaos_amp=0.6, trig,
 	bike_parameter=0.2 // Parameters that the bike modulates
@@ -88,10 +89,10 @@ Ndef(\bike3).set(\freq, 480);
 Ndef(\bike4).set(\freq, 120);
 
 // "Mixing" between voices is done here...
-Ndef(\bike1).set(\amp, 1.0);
-Ndef(\bike2).set(\amp, 1.0);
-Ndef(\bike3).set(\amp, 0.7);
-Ndef(\bike4).set(\amp, 0.7);
+Ndef(\bike1).set(\amp, 1.2);
+Ndef(\bike2).set(\amp, 1.2);
+Ndef(\bike3).set(\amp, 0.8);
+Ndef(\bike4).set(\amp, 0.8);
 
 Ndef(\bike1).set(\chaos_source, \LatooChaos);
 Ndef(\bike2).set(\chaos_source, \HenonChaos);

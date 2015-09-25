@@ -9,9 +9,11 @@
 #include "ofxOsc.h"
 #include "ofxMidi.h"
 
+// These define the destination for OSC messages, to send data to 
+// Supercollider for sound synthesis
 #define HOST "localhost"
+// Can do network transmission and broadcasting
 //#define HOST "192.168.0.255"
-//#define HOST "10.1.1.255"
 #define PORT 57120
 
 #define H_MARGIN 100
@@ -19,18 +21,21 @@
 #define TH_MARGIN 20
 #define TW_MARGIN 20
 
-#define FRAME_RATE 25 
-#define DATA_RATE 50
-#define DISPLAY_TIME_LENGTH 30 // Display last 30 seconds of rider effort
+#define FRAME_RATE 60
+// Next two variables just determine length of display buffer.
+// Make sure DATA_RATE is roughly similar to the rate the Arduino transmits.
+#define DATA_RATE 50 
+#define DISPLAY_TIME_LENGTH 30 // Display last x seconds of rider power
 
+#define BAUD 57600
 #define SERIAL_MSG_START 0xff
 
-#define READY 0
-#define READ_DESTINATION 1
-#define READ_DATA 2
-#define PROCESS_DATA 3 
+#define READY 0x00
+#define READ_DESTINATION 0x01
+#define READ_DATA 0x02
+#define PROCESS_DATA 0x03 
 
-#define NUM_RIDERS 4
+#define NUM_RIDERS 0x04
 
 //using namespace wng;
 
@@ -68,11 +73,6 @@ class ofApp : public ofBaseApp{
         //int midi_channel;
         //int midi_note, midi_arp_note, midi_velocity;
         
-        // Arduino/CV mechanism
-    	//ofArduino ard;
-    	//bool bSetupArduino;
-        //void setupArduino(const int & version);
-       
         ofSerial serial;        
         uint8_t in_bytes[2];
         int read_count;

@@ -21,19 +21,18 @@ Ndef(\bike2).clear;
 Ndef(\bike3).clear;
 Ndef(\bike4).clear;
 
-
 // This is the generic "synth" that all bikes play, with varying parameters
 y = { | amp=1.0, freq=70, chaos_amp=0.6, trig,
 	bike_parameter=0.2 // Parameters that the bike modulates
 	freq_mod = 0.10, // 10% of frequency
 	lfo_freq=15.0, lfo_amt=0.0,
-	chaos_source=\chaos |
+	chaos_source=\chaos, feedback_source=\bike1 |
 
 	freq = freq - (freq * freq_mod * (1.0 - bike_parameter));
 	amp = amp * bike_parameter * 1.0;
 	l = Pulse.kr(lfo_freq, mul: lfo_amt * bike_parameter / 2.0 , add: 1.0 - (lfo_amt * bike_parameter / 2.0));
 
-	a = SinOsc.ar(freq + LFNoise1.ar(0.1!2,5),(Ndef(\bike1) +  Ndef(chaos_source).ar) * chaos_amp * LFNoise1.ar(0.1!2,3), LFNoise1.ar(3,6)).tanh;
+	a = SinOsc.ar(freq + LFNoise1.ar(0.1!2,5),(Ndef(feedback_source) +  Ndef(chaos_source).ar) * chaos_amp * LFNoise1.ar(0.1!2,3), LFNoise1.ar(3,6)).tanh;
 	5.do{
 		a = AllpassL.ar(a,0.3,{0.2.rand+0.1}!2, 2)
 	};
@@ -94,6 +93,11 @@ Ndef(\bike2).set(\amp, 1.2);
 Ndef(\bike3).set(\amp, 0.8);
 Ndef(\bike4).set(\amp, 0.8);
 
+Ndef(\bike1).set(\feedback_source, \bike1);
+Ndef(\bike2).set(\feedback_source, \bike2);
+Ndef(\bike3).set(\feedback_source, \bike3);
+Ndef(\bike4).set(\feedback_source, \bike4);
+
 Ndef(\bike1).set(\chaos_source, \LatooChaos);
 Ndef(\bike2).set(\chaos_source, \HenonChaos);
 Ndef(\bike3).set(\chaos_source, \LatooChaos);
@@ -148,6 +152,10 @@ d =	OSCFunc(
 	}
 	, '/data4'); // path
 )
+
+// ******************************************************
+// DON'T WORRY ABOUT THIS STUFF... IT'S JUST FOR TESTING.
+// ******************************************************
 
 x = OSCFunc.trace(true);
 x = OSCFunc.trace(false);

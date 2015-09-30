@@ -7,7 +7,7 @@ o = s.options;
 // Post the number of output channels
 o.numOutputBusChannels.postln;
 // Set them to a new number
-o.numOutputBusChannels = 4; // The next time it boots, this will take effect
+//o.numOutputBusChannels = 4; // The next time it boots, this will take effect
 // specify a device
 o.device = nil; // use the system default soundcard
 //o.device = "MOTU Traveler";
@@ -56,6 +56,7 @@ Ndef(\LatooChaos, {
 	) * 0.5
 });
 
+Ndef(\bike1).ar(4);
 Ndef.new(\bike1, { | amp=1.0, freq=70, chaos_amp=0.6, trig,
 	bike_parameter=0.0 // Parameters that the bike modulates
 	freq_mod = 0.40, // 40% of frequency
@@ -78,8 +79,9 @@ Ndef.new(\bike1, { | amp=1.0, freq=70, chaos_amp=0.6, trig,
 	[(a + (chaos_amp * Ndef(chaos_source).ar)).tanh * amp * l, Silent.ar(3)];
 
 	}
-).ar(2);
+);
 
+Ndef(\bike2).ar(4);
 Ndef(\bike2, { | amp=1.0, freq=70, chaos_amp=0.6, trig,
 	bike_parameter=0.0 // Parameters that the bike modulates
 	freq_mod = 0.25, // 25% of frequency
@@ -101,8 +103,9 @@ Ndef(\bike2, { | amp=1.0, freq=70, chaos_amp=0.6, trig,
 
 	[Silent.ar(1), (a + (chaos_amp * Ndef(chaos_source).ar)).tanh * amp * l];
 	}
-).ar(2);
+);
 
+Ndef(\bike3).ar(4);
 Ndef(\bike3, { | amp=1.0, freq=70, chaos_amp=0.6, trig,
 	bike_parameter=0.0 // Parameters that the bike modulates
 	freq_mod = 0.25, // 20% of frequency
@@ -122,10 +125,12 @@ Ndef(\bike3, { | amp=1.0, freq=70, chaos_amp=0.6, trig,
 		a = AllpassL.ar(a,0.3,{0.2.rand+0.1}, 2)
 	};
 
-	[Silent.ar(1), Silent.ar(1), (a + (chaos_amp * Ndef(chaos_source).ar)).tanh * amp * l, Silent.ar(1)];
+	[Silent.ar(1), Silent.ar(1),
+		(a + (chaos_amp * Ndef(chaos_source).ar)).tanh * amp * l, Silent.ar(1)];
 	}
-).ar(4);
+);
 
+Ndef(\bike4).ar(4);
 Ndef(\bike4, { | amp=1.0, freq=70, chaos_amp=0.6, trig,
 	bike_parameter=0.0 // Parameters that the bike modulates
 	freq_mod = 0.25, // 20% of frequency
@@ -147,7 +152,7 @@ Ndef(\bike4, { | amp=1.0, freq=70, chaos_amp=0.6, trig,
 
 	[Silent.ar(1), Silent.ar(1), Silent.ar(1), (a + (chaos_amp * Ndef(chaos_source).ar)).tanh * amp * l];
 	}
-).ar(4);
+);
 
 )
 // ****************************************************
@@ -221,6 +226,20 @@ d =	OSCFunc(
 // ************************************************************
 // DON'T WORRY ABOUT THIS STUFF BELOW... IT'S JUST FOR TESTING.
 // ************************************************************
+
+// Don't necessarily do this one! Multi-parameter test...
+(
+~root_freq = [60, 55, 70]
+~b1_freq = [1, 8,   4, 8,  2];
+~b2_freq = [3, 2,   8, 16, 2];
+~b3_freq = [6, 1.5, 1, 6,  2];
+~b4_freq = [2, 1,   2, 1,  2];
+
+~b1_ca = [0.4, 1.2, 0.8, 1.4, 0.1];
+~b2_ca = [0.5, 0.0, 0.1, 1.4, 0.1];
+~b3_ca = [1.5, 0.8, 0.4, 1.4, 0.2];
+~b4_ca = [1.2, 0.3, 0.6, 1.4, 1.8];
+)
 
 x = OSCFunc.trace(true);
 x = OSCFunc.trace(false);

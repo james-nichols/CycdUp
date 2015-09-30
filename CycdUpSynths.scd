@@ -56,70 +56,70 @@ Ndef(\LatooChaos, {
 	) * 0.5
 });
 
-Ndef(\bike1, { | amp=1.0, freq=70, chaos_amp=0.6, trig,
-	bike_parameter=0.2 // Parameters that the bike modulates
-	freq_mod = 0.10, // 10% of frequency
+Ndef.new(\bike1, { | amp=1.0, freq=70, chaos_amp=0.6, trig,
+	bike_parameter=0.0 // Parameters that the bike modulates
+	freq_mod = 0.40, // 40% of frequency
 	lfo_freq=15.0, lfo_amt=0.0,
 	chaos_source=\chaos |
 
-	freq = freq - (freq * freq_mod * (1.0 - bike_parameter));
+	freq = freq - (freq * freq_mod * (1.0 - bike_parameter.linlin(0.0, 0.7, 0.0, 1.0)));
 	amp = amp * bike_parameter * 1.0;
 	l = Pulse.kr(lfo_freq, mul: lfo_amt * bike_parameter / 2.0 ,
 		add: 1.0 - (lfo_amt * bike_parameter / 2.0));
 
-	a = SinOsc.ar(freq + LFNoise1.ar(0.1!2,5),
-		(Ndef(\bike1) +  Ndef(chaos_source).ar) * chaos_amp * LFNoise1.ar(0.1!2,3),
+	a = SinOsc.ar(freq ,//+ LFNoise1.ar(0.1,5),
+		(Ndef(\bike1) +  Ndef(chaos_source).ar) * chaos_amp * LFNoise1.ar(0.1,3),
 		LFNoise1.ar(3,6)).tanh;
 
 	5.do{
-		a = AllpassL.ar(a,0.3,{0.2.rand+0.1}!2, 2)
+		a = AllpassL.ar(a,0.3,{0.2.rand+0.1}, 2)
 	};
 
 	(a + (chaos_amp * Ndef(chaos_source).ar)).tanh * amp * l;
+
 	}
-).ar(1,0);
+).ar();
 
 Ndef(\bike2, { | amp=1.0, freq=70, chaos_amp=0.6, trig,
-	bike_parameter=0.2 // Parameters that the bike modulates
-	freq_mod = 0.10, // 10% of frequency
+	bike_parameter=0.0 // Parameters that the bike modulates
+	freq_mod = 0.25, // 25% of frequency
 	lfo_freq=15.0, lfo_amt=0.0,
 	chaos_source=\HenonChaos |
 
-	freq = freq - (freq * freq_mod * (1.0 - bike_parameter));
+	freq = freq - (freq * freq_mod * (1.0 - bike_parameter.linlin(0.0, 0.7, 0.0, 1.0)));
 	amp = amp * bike_parameter * 1.0;
 	l = Pulse.kr(lfo_freq, mul: lfo_amt * bike_parameter / 2.0 ,
 		add: 1.0 - (lfo_amt * bike_parameter / 2.0));
 
-	a = SinOsc.ar(freq + LFNoise1.ar(0.1!2,5),
-		(Ndef(\bike2) +  Ndef(chaos_source).ar) * chaos_amp * LFNoise1.ar(0.1!2,3),
+	a = SinOsc.ar(freq ,//+ LFNoise1.ar(0.1!2,5),
+		(Ndef(\bike2) +  Ndef(chaos_source).ar) * chaos_amp * LFNoise1.ar(0.1,3),
 		LFNoise1.ar(3,6)).tanh;
 
 	5.do{
-		a = AllpassL.ar(a,0.3,{0.2.rand+0.1}!2, 2)
+		a = AllpassL.ar(a,0.3,{0.2.rand+0.1}, 2)
 	};
 
 	(a + (chaos_amp * Ndef(chaos_source).ar)).tanh * amp * l;
 	}
-).ar(1,1);
-
+).ar(1,offset:1);
 
 Ndef(\bike3, { | amp=1.0, freq=70, chaos_amp=0.6, trig,
-	bike_parameter=0.2 // Parameters that the bike modulates
-	freq_mod = 0.10, // 10% of frequency
+	bike_parameter=0.0 // Parameters that the bike modulates
+	freq_mod = 0.25, // 20% of frequency
 	lfo_freq=15.0, lfo_amt=0.0,
 	chaos_source=\LatooChaos |
 
-	freq = freq - (freq * freq_mod * (1.0 - bike_parameter));
+	freq = freq - (freq * freq_mod * (1.0 - bike_parameter.linlin(0.0, 0.7, 0.0, 1.0)));
 	amp = amp * bike_parameter * 1.0;
 	l = Pulse.kr(lfo_freq, mul: lfo_amt * bike_parameter / 2.0 ,
 		add: 1.0 - (lfo_amt * bike_parameter / 2.0));
 
-	a = SinOsc.ar(freq + LFNoise1.ar(0.1!2,5),
-		(Ndef(\bike3) +  Ndef(chaos_source).ar) * chaos_amp * LFNoise1.ar(0.1!2,3),
+	a = SinOsc.ar(freq ,//+ LFNoise1.ar(0.1!2,5),
+		(Ndef(\bike3) +  Ndef(chaos_source).ar) * chaos_amp * LFNoise1.ar(0.1,3),
 		LFNoise1.ar(3,6)).tanh;
 
 	5.do{
-		a = AllpassL.ar(a,0.3,{0.2.rand+0.1}!2, 2)
+		a = AllpassL.ar(a,0.3,{0.2.rand+0.1}, 2)
 	};
 
 	(a + (chaos_amp * Ndef(chaos_source).ar)).tanh * amp * l;
@@ -127,22 +127,22 @@ Ndef(\bike3, { | amp=1.0, freq=70, chaos_amp=0.6, trig,
 ).ar(1,2);
 
 Ndef(\bike4, { | amp=1.0, freq=70, chaos_amp=0.6, trig,
-	bike_parameter=0.2 // Parameters that the bike modulates
-	freq_mod = 0.10, // 10% of frequency
+	bike_parameter=0.0 // Parameters that the bike modulates
+	freq_mod = 0.25, // 20% of frequency
 	lfo_freq=15.0, lfo_amt=0.0,
 	chaos_source=\LinChaos |
 
-	freq = freq - (freq * freq_mod * (1.0 - bike_parameter));
+	freq = freq - (freq * freq_mod * (1.0 - bike_parameter.linlin(0.0, 0.7, 0.0, 1.0)));
 	amp = amp * bike_parameter * 1.0;
 	l = Pulse.kr(lfo_freq, mul: lfo_amt * bike_parameter / 2.0 ,
 		add: 1.0 - (lfo_amt * bike_parameter / 2.0));
 
-	a = SinOsc.ar(freq + LFNoise1.ar(0.1!2,5),
-		(Ndef(\bike4) +  Ndef(chaos_source).ar) * chaos_amp * LFNoise1.ar(0.1!2,3),
+	a = SinOsc.ar(freq ,//+ LFNoise1.ar(0.1!2,5),
+		(Ndef(\bike4) +  Ndef(chaos_source).ar) * chaos_amp * LFNoise1.ar(0.1,3),
 		LFNoise1.ar(3,6)).tanh;
 
 	5.do{
-		a = AllpassL.ar(a,0.3,{0.2.rand+0.1}!2, 2)
+		a = AllpassL.ar(a,0.3,{0.2.rand+0.1}, 2)
 	};
 
 	(a + (chaos_amp * Ndef(chaos_source).ar)).tanh * amp * l;
@@ -161,25 +161,25 @@ Ndef(\bike3).set(\freq, 360);
 Ndef(\bike4).set(\freq, 120);
 
 // "Mixing" between voices is done here...
-Ndef(\bike1).set(\amp, 1.2);
-Ndef(\bike2).set(\amp, 1.2);
-Ndef(\bike3).set(\amp, 0.8);
-Ndef(\bike4).set(\amp, 0.8);
+Ndef(\bike1).set(\amp, 1.0);
+Ndef(\bike2).set(\amp, 0.85);
+Ndef(\bike3).set(\amp, 0.65);
+Ndef(\bike4).set(\amp, 0.7);
 
 Ndef(\bike1).set(\chaos_source, \LatooChaos);
 Ndef(\bike2).set(\chaos_source, \HenonChaos);
-Ndef(\bike3).set(\chaos_source, \LatooChaos);
+Ndef(\bike3).set(\chaos_source, \HenonChaos);
 Ndef(\bike4).set(\chaos_source, \LinChaos);
 
-Ndef(\bike1).set(\chaos_amp, 0.4);
-Ndef(\bike2).set(\chaos_amp, 0.4);
+Ndef(\bike1).set(\chaos_amp, 0.5);
+Ndef(\bike2).set(\chaos_amp, 0.5);
 Ndef(\bike3).set(\chaos_amp, 1.5);
-Ndef(\bike4).set(\chaos_amp, 0.7);
+Ndef(\bike4).set(\chaos_amp, 2.0);
 
 Ndef(\bike1).set(\lfo_amt, 0.0);
 Ndef(\bike2).set(\lfo_amt, 0.0);
 Ndef(\bike3).set(\lfo_amt, 0.5);
-Ndef(\bike4).set(\lfo_amt, 0.0);
+Ndef(\bike4).set(\lfo_amt, 0.4);
 )
 // ****************************************************
 // ...and start this block last
@@ -190,11 +190,10 @@ Ndef(\bike2).play;
 Ndef(\bike3).play;
 Ndef(\bike4).play;
 
-Ndef(\bike1).fadeTime = 0.2;
-Ndef(\bike2).fadeTime = 0.2;
-Ndef(\bike3).fadeTime = 0.2;
-Ndef(\bike4).fadeTime = 0.2;
-
+Ndef(\bike1).fadeTime = 0.1;
+Ndef(\bike2).fadeTime = 0.1;
+Ndef(\bike3).fadeTime = 0.1;
+Ndef(\bike4).fadeTime = 0.1;
 
 a =	OSCFunc(
 	{ |msg, time, addr, recvPort|
@@ -219,9 +218,9 @@ d =	OSCFunc(
 	, '/data4'); // path
 )
 
-// ******************************************************
-// DON'T WORRY ABOUT THIS STUFF... IT'S JUST FOR TESTING.
-// ******************************************************
+// ************************************************************
+// DON'T WORRY ABOUT THIS STUFF BELOW... IT'S JUST FOR TESTING.
+// ************************************************************
 
 x = OSCFunc.trace(true);
 x = OSCFunc.trace(false);
